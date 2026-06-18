@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import type { StepDefinition, StepState } from "@/lib/types";
 
 type Props = {
@@ -27,6 +28,12 @@ export function StepCard({
   onSave,
   onNext,
 }: Props) {
+  const outputRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    outputRef.current?.scrollTo({ top: 0 });
+  }, [state.aiOutput]);
+
   return (
     <section className="rounded-2xl border border-blue-500 bg-white p-6 shadow-sm">
       <div className="mb-5 flex items-start gap-3">
@@ -67,9 +74,12 @@ export function StepCard({
           <div className="mt-5">
             <div className="mb-2 flex items-center justify-between gap-3">
               <p className="text-sm font-semibold text-slate-800">AI output</p>
-              <p className="text-xs text-slate-500">Long feedback can be scrolled inside this box.</p>
+              <p className="text-xs text-slate-500">反馈较长时，可以在这个框内滚动阅读。</p>
             </div>
-            <div className="max-h-[420px] min-h-32 overflow-y-auto overscroll-contain whitespace-pre-wrap rounded-lg border border-slate-200 bg-slate-50 px-3 py-3 text-sm leading-6 text-slate-700 md:max-h-[520px]">
+            <div
+              ref={outputRef}
+              className="max-h-[560px] min-h-32 overflow-y-auto overscroll-contain whitespace-pre-wrap rounded-lg border border-slate-200 bg-slate-50 px-3 py-3 text-sm leading-6 text-slate-700"
+            >
               {state.aiOutput || "AI guidance will appear here."}
             </div>
           </div>
