@@ -4,6 +4,24 @@ import { buildPrompt, SYSTEM_INSTRUCTION } from "@/lib/prompts";
 
 export const runtime = "nodejs";
 
+const MAX_AI_OUTPUT_CHARS = 1300;
+
+function limitOutputLength(text: string) {
+  if (text.length <= MAX_AI_OUTPUT_CHARS) return text;
+
+  const candidate = text.slice(0, MAX_AI_OUTPUT_CHARS);
+  const punctuationMarks = ["。", "！", "？", "；", "\n"];
+  const cutIndex = Math.max(
+    ...punctuationMarks.map((mark) => candidate.lastIndexOf(mark)),
+  );
+
+  if (cutIndex >= 1000) {
+    return candidate.slice(0, cutIndex + 1).trim();
+  }
+
+  return candidate.trim();
+}
+
 function sanitizeAiOutput(text: string) {
   const sectionMarkers = [
     { marker: "整体反馈:", keepMarker: true },
@@ -43,7 +61,7 @@ function sanitizeAiOutput(text: string) {
     .replace(/\n{3,}/g, "\n\n")
     .trim();
 
-  return cleanedText
+  const filteredText = cleanedText
     .split(/\r?\n/)
     .filter((line) => {
       const trimmedLine = line.trim();
@@ -56,6 +74,8 @@ function sanitizeAiOutput(text: string) {
     .join("\n")
     .replace(/\n{3,}/g, "\n\n")
     .trim();
+
+  return limitOutputLength(filteredText);
 }
 
 export async function POST(request: Request) {
@@ -91,7 +111,7 @@ export async function POST(request: Request) {
       model: process.env.OPENAI_MODEL || "gpt-5.4-mini",
       instructions: SYSTEM_INSTRUCTION,
       input: prompt,
-      max_output_tokens: 1200,
+      max_output_tokens: 1900,
     });
 
     return NextResponse.json({ output: sanitizeAiOutput(response.output_text) });

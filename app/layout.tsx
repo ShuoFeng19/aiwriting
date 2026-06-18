@@ -17,7 +17,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
               AI-assisted CT-oriented Writing Practice
             </Link>
             <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700">
-              v8
+              v9
             </span>
             <Link href="/admin" className="text-sm text-slate-500 hover:text-slate-900">
               Teacher export
