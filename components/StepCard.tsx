@@ -65,8 +65,11 @@ export function StepCard({
           </button>
 
           <div className="mt-5">
-            <p className="mb-2 text-sm font-semibold text-slate-800">AI output</p>
-            <div className="min-h-32 whitespace-pre-wrap rounded-lg border border-slate-200 bg-slate-50 px-3 py-3 text-sm leading-6 text-slate-700">
+            <div className="mb-2 flex items-center justify-between gap-3">
+              <p className="text-sm font-semibold text-slate-800">AI output</p>
+              <p className="text-xs text-slate-500">Long feedback can be scrolled inside this box.</p>
+            </div>
+            <div className="max-h-[420px] min-h-32 overflow-y-auto overscroll-contain whitespace-pre-wrap rounded-lg border border-slate-200 bg-slate-50 px-3 py-3 text-sm leading-6 text-slate-700 md:max-h-[520px]">
               {state.aiOutput || "AI guidance will appear here."}
             </div>
           </div>

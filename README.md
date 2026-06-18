@@ -20,7 +20,9 @@ box. Stages 2, 4 and 5 show concise independent-work instructions only.
 
 In Step 1, the brainstorming box is pre-filled with five required items:
 target claim, grounds, supporting information, warrant, and inference or implication.
-AI output is formatted in plain text, with English first and Chinese second.
+AI output is Chinese-only IELTS teacher feedback in plain text. It gives targeted
+comments, concrete examples and sentence fragments, but does not write the full
+paragraph for the student.
 
 ## Features
 
