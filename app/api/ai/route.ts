@@ -33,13 +33,27 @@ function sanitizeAiOutput(text: string) {
     .sort((a, b) => a.index - b.index)[0];
   const textToClean = markerMatch ? text.slice(markerMatch.index + markerMatch.length) : text;
 
-  return textToClean
+  const cleanedText = textToClean
     .replace(/[*#`]/g, "")
     .replace(/^[ \t]*[-•]\s+/gm, "")
     .replace(/^\s*(English feedback|English teacher feedback|Chinese version|Chinese feedback|Chinese teacher feedback|中文反馈|中文老师反馈|中文版本)\s*[:：]?\s*$/gim, "")
     .replace(/\bOption\s+[A-Z]\s*[:：]/gi, "")
     .replace(/\bchoose one\b/gi, "")
     .replace(/[ \t]+\n/g, "\n")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+
+  return cleanedText
+    .split(/\r?\n/)
+    .filter((line) => {
+      const trimmedLine = line.trim();
+      const englishWords = trimmedLine.match(/[A-Za-z]+(?:'[A-Za-z]+)?/g) ?? [];
+      const chineseChars = trimmedLine.match(/[\u4e00-\u9fff]/g) ?? [];
+      const endsLikeSentence = /[.!?]["'”’)]?$/.test(trimmedLine);
+      const isMostlyEnglish = englishWords.join("").length > chineseChars.length * 3;
+      return !(englishWords.length >= 9 && isMostlyEnglish && endsLikeSentence);
+    })
+    .join("\n")
     .replace(/\n{3,}/g, "\n\n")
     .trim();
 }
